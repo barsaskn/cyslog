@@ -1,7 +1,7 @@
 #include <queue.h>
 
 Queue* init_queue(uint32_t data_size) {
-    Queue* q = (Queue*)malloc(sizeof(Queue)); // Allocate memory for the queue
+    Queue* q = (Queue*)malloc(sizeof(Queue)); 
     if (q == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
@@ -11,7 +11,7 @@ Queue* init_queue(uint32_t data_size) {
     q->data = (char **)malloc(data_size * sizeof(char *));
     if (q->data == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
-        free(q); // Clean up allocated memory
+        free(q);
         exit(EXIT_FAILURE);
     }
 

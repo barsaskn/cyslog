@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <queue.h>
 #include <udp_server.h>
+#include <unistd.h>
 
 int main() {
-    Queue* q = init_queue(32);
-    init_udp_server(8080);
-    init_udp_server(8081);
-    init_udp_server(8082);
+    Queue* queue = init_queue(100);
+    Udp_server* udp_server = init_udp_server(queue, 8080);
+    listen_udp_server(udp_server);
+    close_udp_server(udp_server);
+    while(1);
 }

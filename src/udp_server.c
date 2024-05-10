@@ -1,11 +1,10 @@
 #include <udp_server.h>
 
-int init_udp_server(int port) 
+Udp_server* init_udp_server(Queue* queue, int port) 
 {
+    Udp_server* udp_server = (Udp_server*)malloc(sizeof(Udp_server));
     int sockfd;
-    struct sockaddr_in server_addr, client_addr;
-    socklen_t client_len;
-    char buffer[MAX_BUFFER_SIZE];
+    struct sockaddr_in server_addr;
 
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
         LOG_ERROR("Error openning socket");
@@ -15,8 +14,51 @@ int init_udp_server(int port)
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(port);
 
-    if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
-        error("ERROR on binding");
 
-    LOG_DEBUG("Udp server init on port %d", port);
+    if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+        LOG_ERROR("ERROR on binding");
+
+    LOG_INFO("Udp server init on port %d", port);
+    
+    udp_server->sockfd = sockfd;
+    udp_server->queue = queue;
+    udp_server->listening = 0;
+    udp_server->port = port;
+    return udp_server;
 }
+
+void *listen_udp_server_thread(void* arg) {
+    Udp_server * udp_server = (Udp_server *)arg;
+    udp_server->listening = 1;
+    char buffer[MAX_BUFFER_SIZE];
+    memset(&buffer, 0, sizeof(MAX_BUFFER_SIZE));
+
+    while (udp_server->listening) {
+        int n;
+        n = recvfrom(udp_server->sockfd, buffer, MAX_BUFFER_SIZE, MSG_WAITALL, NULL, NULL);
+        if(n > 0) {
+            buffer[n] = '\0';
+            LOG_DEBUG("Client : %s", buffer);
+            enqueue(udp_server->queue, buffer);
+        }
+    }
+    return NULL;
+}
+
+void listen_udp_server(Udp_server* udp_server) {
+    pthread_t listener_thread;
+    int rc;
+    rc = pthread_create(&listener_thread, NULL, listen_udp_server_thread, (void *)udp_server);
+    if (rc) {
+        LOG_ERROR("ERROR; return code from pthread_create() is %d\n", rc);
+    }
+}
+
+void close_udp_server(Udp_server* udp_server) {
+    LOG_DEBUG("Closing port %d", udp_server->sockfd);
+    udp_server->listening = 0;
+    shutdown(udp_server->sockfd, SHUT_RDWR);
+    close(udp_server->sockfd);
+    free(udp_server);
+}
+

@@ -7,9 +7,21 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <log.h>
+#include <queue.h>
 
 #define MAX_BUFFER_SIZE 1024
 
-int init_udp_server(int port);
+typedef struct {
+    int sockfd;
+    int listening;
+    int port;
+    Queue* queue;
+} Udp_server;
+
+Udp_server* init_udp_server(Queue* queue, int port);
+
+void listen_udp_server(Udp_server* udp_server);
+
+void close_udp_server(Udp_server* udp_server);
 
 #endif /* UDP_SERVER_H */
