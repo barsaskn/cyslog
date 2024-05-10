@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g
 LDFLAGS = 
-INCLUDE_DIR = include 
+INCLUDE_DIR = include
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -15,6 +15,7 @@ EXEC = $(BIN_DIR)/cyslog
 TEST_SRCS = $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJS = $(patsubst $(TEST_DIR)/%.c, $(OBJ_DIR)/%.o,$(TEST_SRCS))
 TEST_EXEC = $(BIN_DIR)/test_cyslog
+TEST_INCLUDE_DIR = test
 
 .PHONY: all clean test
 
@@ -36,7 +37,7 @@ $(TEST_EXEC): $(TEST_OBJS) $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 $(OBJ_DIR)/%.o: $(TEST_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c -o $@ $^
+	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -I$(TEST_INCLUDE_DIR) -c -o $@ $^
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)
