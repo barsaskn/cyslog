@@ -46,6 +46,6 @@ int check_server_data_from_queue() {
 void run_all_udp_server_tests() {
     printf("*** UDP SERVER TEST STARTING ***\n");
     run_udp_server_test();
-    //check_server_data_from_queue();
+    check_server_data_from_queue();
     printf("*** UDP SERVER TEST SUCCESS ***\n");
 }

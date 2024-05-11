@@ -8,5 +8,5 @@ int main() {
     Udp_server* udp_server = init_udp_server(queue, 8080);
     listen_udp_server(udp_server);
     close_udp_server(udp_server);
-    while(1);
+    //while(1);
 }

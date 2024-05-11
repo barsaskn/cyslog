@@ -36,19 +36,22 @@ void *listen_udp_server_thread(void* arg) {
     while (udp_server->listening) {
         int n;
         n = recvfrom(udp_server->sockfd, buffer, MAX_BUFFER_SIZE, MSG_WAITALL, NULL, NULL);
-        if(n > 0) {
+        if (n < 0) {
+            break;
+        }
+        else if(n > 0) {
             buffer[n] = '\0';
             LOG_DEBUG("Client : %s", buffer);
             enqueue(udp_server->queue, buffer);
-        }
+        } 
     }
+    LOG_DEBUG("Listening thread exit");
     return NULL;
 }
 
 void listen_udp_server(Udp_server* udp_server) {
-    pthread_t listener_thread;
     int rc;
-    rc = pthread_create(&listener_thread, NULL, listen_udp_server_thread, (void *)udp_server);
+    rc = pthread_create(&udp_server->listening_thread, NULL, listen_udp_server_thread, (void *)udp_server);
     if (rc) {
         LOG_ERROR("ERROR; return code from pthread_create() is %d\n", rc);
     }
@@ -59,6 +62,7 @@ void close_udp_server(Udp_server* udp_server) {
     udp_server->listening = 0;
     shutdown(udp_server->sockfd, SHUT_RDWR);
     close(udp_server->sockfd);
+    pthread_join(udp_server->listening_thread, NULL);
     free(udp_server);
 }
 

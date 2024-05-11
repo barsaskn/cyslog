@@ -16,6 +16,7 @@ typedef struct {
     int listening;
     int port;
     Queue* queue;
+    pthread_t listening_thread;
 } Udp_server;
 
 Udp_server* init_udp_server(Queue* queue, int port);
