@@ -12,10 +12,10 @@ typedef struct {
     char* msgid;
     char* structured_data;
     char* message;
-} SyslogMessage;
+} Syslog_message;
 
-SyslogMessage* parse_rfc5424(char* syslog_message);
+Syslog_message* parse_rfc5424(char* syslog_message);
 
-void free_syslog_message(SyslogMessage* msg);
+void free_syslog_message(Syslog_message* msg);
 
 #endif // RFC5424_PARSER_H
