@@ -1,7 +1,12 @@
 #ifndef RFC5424_PARSER_H
 #define RFC5424_PARSER_H
 
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <log.h>
 #include <rfc5424/severity.h>
+#include <rfc5424/facility.h>
 
 typedef struct {
     char* priority;

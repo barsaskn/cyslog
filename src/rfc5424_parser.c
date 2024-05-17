@@ -1,8 +1,4 @@
-// rfc5424_parser.c
 #include <rfc5424_parser.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 
 Syslog_message* parse_rfc5424(char* syslog_message) {
     Syslog_message* msg = (Syslog_message*)malloc(sizeof(Syslog_message));
@@ -31,6 +27,9 @@ Syslog_message* parse_rfc5424(char* syslog_message) {
     msg->priority = strndup(message_copy, priority_len);
     
     Syslog_severity severity = parse_syslog_severity(msg->priority);
+    Syslog_facility facility = parse_syslog_facility(msg->priority);
+    LOG_DEBUG("Severity: %d", severity);
+    LOG_DEBUG("Facility: %d", facility);
     char* current_position = token + 1;
 
     token = strtok(current_position, " ");
