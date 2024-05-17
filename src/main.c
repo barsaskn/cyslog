@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <queue.h>
 #include <udp_server.h>
+#include <rfc5424_parser.h>
 #include <unistd.h>
 
 int main() {

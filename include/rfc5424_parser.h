@@ -1,6 +1,7 @@
-// rfc5424_parser.h
 #ifndef RFC5424_PARSER_H
 #define RFC5424_PARSER_H
+
+#include <rfc5424/severity.h>
 
 typedef struct {
     char* priority;
