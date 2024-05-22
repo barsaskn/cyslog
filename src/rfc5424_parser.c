@@ -77,6 +77,13 @@ Syslog_message* parse_rfc5424(char* syslog_message) {
     return msg;
 }
 
+char* rfc5424_prettier(Syslog_message* message) {
+    int buffer_size = snprintf(NULL, 0, "Hostname = %s, Appname = %s, Message = %s", message->hostname, message->appname, message->message) + 1;
+    char *buffer = (char *)malloc(buffer_size);
+    sprintf(buffer, "Hostname = %s, Appname = %s, Message = %s", message->hostname, message->appname, message->message);
+    return buffer;
+}
+
 void free_syslog_message(Syslog_message* msg) {
     if (!msg) return;
     free(msg->version);

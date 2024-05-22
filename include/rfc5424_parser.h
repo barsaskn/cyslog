@@ -26,6 +26,8 @@ typedef struct {
 
 Syslog_message* parse_rfc5424(char* syslog_message);
 
+char* rfc5424_prettier(Syslog_message* message);
+
 void free_syslog_message(Syslog_message* msg);
 
 #endif // RFC5424_PARSER_H
