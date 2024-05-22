@@ -79,8 +79,10 @@ Syslog_message* parse_rfc5424(char* syslog_message) {
 
 char* rfc5424_prettier(Syslog_message* message) {
     int buffer_size = snprintf(NULL, 0, "Hostname = %s, Appname = %s, Message = %s", message->hostname, message->appname, message->message) + 1;
-    char *buffer = (char *)malloc(buffer_size);
-    sprintf(buffer, "Hostname = %s, Appname = %s, Message = %s", message->hostname, message->appname, message->message);
+    char* buffer = (char *)malloc(buffer_size);
+    char time_buffer[30];
+    strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", message->timestamp);
+    sprintf(buffer, "%s Hostname = %s, Appname = %s, Message = %s", time_buffer,message->hostname, message->appname, message->message);
     return buffer;
 }
 
