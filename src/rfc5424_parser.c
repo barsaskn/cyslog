@@ -24,12 +24,12 @@ Syslog_message* parse_rfc5424(char* syslog_message) {
         return NULL;
     }
     size_t priority_len = token - message_copy + 1;
-    msg->priority = strndup(message_copy, priority_len);
     
-    Syslog_severity severity = parse_syslog_severity(msg->priority);
-    Syslog_facility facility = parse_syslog_facility(msg->priority);
-    LOG_DEBUG("Severity: %d", severity);
-    LOG_DEBUG("Facility: %d", facility);
+    char* priority = strndup(message_copy, priority_len);
+    msg->severity = parse_syslog_severity(priority);
+    msg->facility = parse_syslog_facility(priority);
+    free(priority);
+
     char* current_position = token + 1;
 
     token = strtok(current_position, " ");
@@ -52,8 +52,9 @@ Syslog_message* parse_rfc5424(char* syslog_message) {
         }
         fields[i] = token;
     }
-
-    msg->timestamp = strdup(fields[0]);
+    
+    char* timestamp_str = strdup(fields[0]);
+    msg->timestamp = parse_rfc3339(timestamp_str);
     msg->hostname = strdup(fields[1]);
     msg->appname = strdup(fields[2]);
     msg->procid = strdup(fields[3]);
@@ -71,14 +72,13 @@ Syslog_message* parse_rfc5424(char* syslog_message) {
     } else {
         msg->message = NULL;
     }
-
+    free(timestamp_str);
     free(message_copy);
     return msg;
 }
 
 void free_syslog_message(Syslog_message* msg) {
     if (!msg) return;
-    free(msg->priority);
     free(msg->version);
     free(msg->timestamp);
     free(msg->hostname);

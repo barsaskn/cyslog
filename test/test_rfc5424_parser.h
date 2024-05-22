@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <rfc5424_parser.h>
+#include <rfc5424/facility.h>
+#include <rfc5424/severity.h>
 
 void run_all_rfc5424_parser_tests();
 

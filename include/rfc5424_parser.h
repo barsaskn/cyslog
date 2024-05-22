@@ -5,13 +5,17 @@
 #include <string.h>
 #include <stdio.h>
 #include <log.h>
+#include <time.h>
+
 #include <rfc5424/severity.h>
 #include <rfc5424/facility.h>
+#include <rfc5424/timestamp_rfc3339_parser.h>
 
 typedef struct {
-    char* priority;
+    Syslog_severity severity;
+    Syslog_facility facility;
     char* version;
-    char* timestamp;
+    struct tm* timestamp;
     char* hostname;
     char* appname;
     char* procid;
