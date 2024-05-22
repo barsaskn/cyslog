@@ -20,7 +20,7 @@ static inline void get_current_timestamp(char* buffer, size_t buffer_size) {
 
     strftime(buffer, buffer_size, "[%Y-%m-%d %H:%M:%S", t);
     size_t len = strlen(buffer);
-    snprintf(buffer + len, buffer_size - len, ".%03ld]", tv.tv_usec / 1000);
+    snprintf(buffer + len, buffer_size - len, ".%03d]", tv.tv_usec / 1000);
 }
 
 #define LOG_DEBUG(msg, ...) do { \
